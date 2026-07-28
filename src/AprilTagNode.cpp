@@ -269,12 +269,9 @@ void AprilTagNode::onCamera(const sensor_msgs::msg::Image::ConstSharedPtr& msg_i
 
     pub_detections->publish(msg_detections);
 
-    // Disabled: apriltag publishes camera→tag transforms, but our TF tree already has
-    // tag36h11:0→tag36h11:N (static). Publishing camera→tag creates two parents for
-    // the tag frame, breaking TF2's tree structure. Instead, the relocalize node
-    // subscribes to /detections, inverts to tag→camera, and publishes that.
-    // if(estimate_pose != nullptr)
-    //     tf_broadcaster.sendTransform(tfs);
+    // Publish camera -> tag transforms
+    if(estimate_pose != nullptr)
+        tf_broadcaster.sendTransform(tfs);
 
     apriltag_detections_destroy(detections);
 }

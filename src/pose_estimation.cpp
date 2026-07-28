@@ -28,11 +28,13 @@ homography(apriltag_detection_t* const detection, const std::array<double, 4>& i
 geometry_msgs::msg::Transform
 pnp(apriltag_detection_t* const detection, const std::array<double, 4>& intr, double tagsize)
 {
+    // AprilTag corner order: bottom-left, bottom-right, top-right, top-left
+    // AprilTag convention: X right, Y down, Z into tag (away from camera)
     const std::vector<cv::Point3d> objectPoints{
-        {-tagsize / 2, -tagsize / 2, 0},
-        {+tagsize / 2, -tagsize / 2, 0},
-        {+tagsize / 2, +tagsize / 2, 0},
-        {-tagsize / 2, +tagsize / 2, 0},
+        {-tagsize / 2, +tagsize / 2, 0},  // p[0]: bottom-left  (-x, +y)
+        {+tagsize / 2, +tagsize / 2, 0},  // p[1]: bottom-right (+x, +y)
+        {+tagsize / 2, -tagsize / 2, 0},  // p[2]: top-right    (+x, -y)
+        {-tagsize / 2, -tagsize / 2, 0},  // p[3]: top-left     (-x, -y)
     };
 
     const std::vector<cv::Point2d> imagePoints{
